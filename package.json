@@ -1,0 +1,26 @@
+{
+    "name" : "spacemud",
+    "version" : "0.0.1",
+    "description" : "A simple space game.",
+    "tags" : ["nodejs", "game", "space", "mud"],
+    "author" : "Edmond Meinfelder <edmond.meinfelder@gmail.com>",
+    "homepage" : "https://github.com/edmondmeinfelder/spacemud",
+    "repository" : {
+        "type" : "git",
+        "url" : "git@github.com:edmondmeinfelder/spacemud.git"
+    },
+    "bugs" : { "url" : "https://github.com/edmondmeinfelder/spacemud/issues" },
+    "licenses" : [{
+        "type" : "OpenSource Artistic License",
+        "url" : "http://www.opensource.org/licenses/artistic-license-2.0"
+    }],
+    "main" : "./lib/SpaceMud.js",
+    "scripts" : {"test" : "node ./test/test.js"},
+    "engines" : { "node" : ">=v0.6.0" },
+    "dependencies" : {
+        "async" : ""
+    },
+    "devDependencies": {
+        "async" : ""
+    }
+}
