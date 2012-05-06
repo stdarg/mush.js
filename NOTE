@@ -1,1 +1,3 @@
-Get rid of singleton clases - dumb idea.
+Change command parser to use a hash rather than a switch.
+Remove name duplication in Player class.
+Improve db object, base class w/ specializatoin for object types maybe?
