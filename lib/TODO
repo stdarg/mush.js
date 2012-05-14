@@ -1,0 +1,7 @@
+Implement location.
+    When player logs in, show room desc, exits, and inventory.
+Implement look command.
+Players not logged in can only type and match quit, connect or create.
+Logged in players cannot type and match connect and create.
+Create Flag Object - 32 bits
+Place error strings in en-us.js config file.
