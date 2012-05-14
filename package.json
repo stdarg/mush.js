@@ -19,7 +19,8 @@
     "engines" : { "node" : ">=v0.6.0" },
     "dependencies" : {
         "async" : "",
-        "mongodb" : ""
+        "mongodb" : "",
+        "bit-array" : ""
     },
     "devDependencies": {
         "async" : ""
