@@ -1,5 +1,5 @@
-Implement location.
-    When player logs in, show room desc, exits, and inventory.
+When player logs in, show room desc, exits, and inventory.
 Implement look command.
 Create Flag Object - 32 bits
 Place error strings in en-us.js config file.
+Make the command table an object, give it an alias command
