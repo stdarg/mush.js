@@ -1,0 +1,10 @@
+Spaces, not tabs. (Weird, because I kinda like tabs)
+4-space indents, not 2 or 3 or 1. (I'm old, with poor vision.)
+Use JSDOC tags on all files, functions and methods. See: http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
+If a function is longer than 60 lines, odds are you're being lazy or you have a really good reason. Keep functions and methods short when possible.
+This project uses OOP, keep objects simple.
+Always add a 'use strict'; in your JS files.
+Avoid deeply nested asynchronous code by functional decomposition and the async module.
+Keep it simple, stupid. 
+Don't repeat yourself.
+Make liberal use of assert & is to validate parameter types.
