@@ -20,7 +20,7 @@ logs/
 # ignore swap files
 *.swp
 
-# ignore tags file (I'm trying to get ctags/etags working for JavaScript - Edmond)
+# ignore tags file 
 tags
 
 # emacs turds
