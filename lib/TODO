@@ -1,3 +1,4 @@
+Create a base object
 Clean up player object, add methods.
 When player logs in, load location, location's inventory.
 When player logs in, show room desc, exits, and inventory.
