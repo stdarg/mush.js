@@ -20,7 +20,7 @@ logs/
 # ignore swap files
 *.swp
 
-# ignore tags file 
+# ignore tags file
 tags
 
 # emacs turds

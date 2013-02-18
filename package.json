@@ -1,10 +1,10 @@
 {
       "name" : "mush.js"
     , "version" : "0.0.1"
-    , "description" : "A simple space game."
+    , "description" : "An attempt to create a MUSH using node.js."
     , "tags" : ["nodejs", "game", "mush", "mud"]
-    , "author" : "Edmond Meinfelder <edmond.meinfelder@gmail.com>"
-    , "homepage" : "https://github.com/edmondmeinfelder/mush.js"
+    , "author" : "Edmond Meinfelder <edmond@stdarg.com>"
+    , "homepage" : "https://github.com/stdarg/mush.js"
     , "repository" : {
           "type" : "git"
         , "url" : "git@github.com:edmondmeinfelder/mush.js.git"
@@ -20,7 +20,8 @@
     , "dependencies" : {
           "async" : ""
         , "mongodb" : ""
-        , "log" : ""
+        , "fuzelog" : ""
+        , "is2" : ""
         , "colors" : ""
         , "lru" : ""
       }

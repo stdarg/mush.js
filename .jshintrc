@@ -12,7 +12,7 @@
     "indent"        : 4,
     "latedef"       : false,
     "laxcomma"      : true,
-    "maxcomplexity" : 9,
+    "maxcomplexity" : 39,
     "maxdepth"      : 5,
     "maxlen"        : 110,
     "maxparams"     : 4,
