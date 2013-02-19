@@ -12,8 +12,8 @@ module.exports = {
         name: 'mush.js',            // Category name, shows as %c in pattern
 
         // FileStream to log to (can be file name or a stream)
-        file: __dirname + '../mush.log',
-        fileFlags: 'a'              // Flags used in fs.createWriteStream to create log file
+        file: __dirname + '/../mush.log',
+        fileFlags: 'a',             // Flags used in fs.createWriteStream to create log file
 
         consoleLogging: true,       // Flag to direct output to console
         colorConsoleLogging: true,  // Flag to color output to console
