@@ -25,6 +25,7 @@
         , "is2" : ""
         , "colors" : ""
         , "lru" : ""
+        , "bit-array" : ""
       }
     , "devDependencies": {
         "async" : ""
