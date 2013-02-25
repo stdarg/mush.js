@@ -19,15 +19,15 @@
     , "engines" : { "node" : ">=v0.8.0" }
     , "dependencies" : {
           "async" : ""
-        , "sprintf.js" : ""
-        , "mongodb" : ""
+        , "bit-array" : ""
+        , "colors" : ""
+        , "config-js" : ""
         , "fuzelog" : ""
         , "is2" : ""
-        , "colors" : ""
         , "lru" : ""
-        , "bit-array" : ""
+        , "mongodb" : ""
       }
     , "devDependencies": {
-        "async" : ""
+          "mocha" : ""
       }
 }
