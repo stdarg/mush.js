@@ -9,6 +9,6 @@ Style Guide
 ** Not everything has to be an object, however.
 * Always add 'use strict'; in your JS files.
 * Avoid deeply nested asynchronous code by using functional decomposition and the async module.
-* KISS: Keep it simple, stupid. 
+* KISS: Keep it simple, stupid.
 * DRY: Don't repeat yourself.
-* Validate: Make liberal use of assert & is to validate parameter types.
+* Validate your inputs: Make liberal use of assert & is to validate parameter types.
