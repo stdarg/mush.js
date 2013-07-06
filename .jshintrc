@@ -15,7 +15,7 @@
     "maxcomplexity" : 39,
     "maxdepth"      : 5,
     "maxlen"        : 110,
-    "maxparams"     : 7,
+    "maxparams"     : 4,
     "maxstatements" : 100,
     "newcap"        : true,
     "noarg"         : true,
@@ -29,6 +29,7 @@
     "undef"         : true,
     "unused"        : true,
     "strict"        : true,
+    "swindent"      : true,
     "trailing"      : true,
     "undef"         : true,
     "unused"        : true,
@@ -36,10 +37,15 @@
 
     "globals" : {
         "jasmine"   : false,
+        "is"        : true,
+        "util"      : true,
+        "assert"    : true,
+        "log"       : true,
+        "MushUtils" : true,
         "spyOn"     : false,
         "it"        : false,
         "console"   : true,
-        "log"       : true,
+        "logger"    : true,
         "describe"  : false,
         "expect"    : false,
         "beforeEach": false,
@@ -47,6 +53,8 @@
         "sprintf"   : true,
         "waits"     : false,
         "waitsFor"  : false,
-        "runs"      : false
+        "runs"      : false,
+        "toString"  : true,
+        "toString.call"  : true
     }
 }
