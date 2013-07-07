@@ -21,7 +21,7 @@ function Obj(type) {
     this.Flags = new Flags();
 
     if (arguments.length === 1 && is.nonEmptyObj(arguments[0])) {
-        this.updateWithDbObj(arguments[0]);
+        this.loadFromDb(arguments[0]);
     } else if (arguments.length === 1 && is.str(type)) {
         this.data.type = type;
     } else {
@@ -71,10 +71,10 @@ Obj.prototype.getTypeStr = function() {
  * Method to update all attributes from a database object.A
  * @param {Object} ddobj An object holding all the properties.
  */
-Obj.prototype.updateWithDbObj = function(dbObj) {
+Obj.prototype.loadFromDb = function(dbObj) {
 
     if (!dbObj) {
-        log.error('Obj.updateWithDbObj: received a null argument for dbObj.');
+        log.error('Obj.loadFromDb: received a null argument for dbObj.');
         return;
     }
 
@@ -85,7 +85,28 @@ Obj.prototype.updateWithDbObj = function(dbObj) {
 
     assert.ok(dbObj.name && dbObj.name.length);
     this.data = dbObj;
+    // create a clone of this.data w/out references
+    this.db = mush_utils.clone(this.data);
 };
+
+/**
+ * Method to write all the attributes to disk.
+ * @param {Object} ddobj An object holding all the properties.
+ */
+/*
+Obj.prototype.saveToDb = function() {
+
+    assert.ok(is.nonEmptyObj(this.data));
+
+    if (dbObj.flags && dbObj.flags.bits && dbObj.flags.length) {
+        this.flags.import(dbObj.flags);
+        delete dbObj.flags;
+    }
+
+    assert.ok(dbObj.name && dbObj.name.length);
+    this.data = dbObj;
+};
+*/
 ////////////////////////////////////////////////////////////////////////////////
 // Getters and setters for all the object-derived attributes follow.
 // The following use the method defineProperty on the Object prototype to create

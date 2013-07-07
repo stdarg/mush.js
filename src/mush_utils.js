@@ -25,6 +25,16 @@ exports.createHash = function(strIn) {
 };
 
 /**
+ * Create an independent clone of the object without any references.
+ * @param {Object} obj The object to clone.
+ * @return {Object} An independent copy of the object without references.
+ */
+exports.clone = function(obj) {
+    assert.ok(is.obj(obj));
+    return JSON.parse(JSON.stringify(obj));
+};
+
+/**
  * Set up the global logger.
  */
 exports.createLogger = function() {
@@ -50,8 +60,12 @@ exports.createLogger = function() {
     return new Log(logConfig);
 };
 
-var isspace;
-exports.isspace = isspace = function(ch) {
+/**
+ * isspace(str|ch) - returns true if any character received is a space
+ * @param {String} ch - Could be a character or many characters
+ * @return {Boolena} true if any character is a space, false otherwise
+ */
+exports.isspace = function(ch) {
     if (' \t\n\r\v'.indexOf(ch) > -1)
         return true;
     return false;
@@ -155,20 +169,6 @@ exports.handleSubst = function(enactor, actor, text) {
     }
 
 };
-
-/*
-exports.makeObjReadOnly = function(obj) {
-    assert.ok(is.obj(obj));
-    for (var prop in obj) {
-        Object.defineProperty(obj, prop, {
-            value:          obj[prop],
-            writable:       false,
-            enumerable:     true,
-            configurable:   true
-        });
-    }
-};
-*/
 
 /**
  * Recursively make each property in the object and its sub-objects immutable.

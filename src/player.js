@@ -25,8 +25,9 @@ function Player() {
  * @param {Object} dbObj A db object with the player data.
  */
 Player.prototype.login = function(dbObj) {
-    this.updateWithDbObj(dbObj);
+    this.loadFromDb(dbObj);
     this.setFlag('connected', true);
+    // FIXME: handle LOGIN-based attributes
 };
 
 Player.prototype.isConnected = function() {
