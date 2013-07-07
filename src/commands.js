@@ -52,7 +52,7 @@ Commands.prototype.connect = function(cmdEntry) {
     assert.ok(is.nonEmptyStr(playerName));
     assert.ok(is.nonEmptyStr(hash));
 
-    global.mush.players.findByName(playerName, function(err, player) {
+    global.mush.playerdb.findByName(playerName, function(err, player) {
         if (err) {
             assert.ok(is.nonEmptyStr(err));
             log.error('Commands.connect: %j', err);
@@ -85,7 +85,7 @@ Commands.prototype.create = function(cmdEntry) {
     assert.ok(is.nonEmptyStr(playerName));
     assert.ok(is.nonEmptyStr(hash));
 
-    global.mush.players.findByName(playerName, function(err, player) {
+    global.mush.playerdb.findByName(playerName, function(err, player) {
         if (err) {
             log.error('Commands.create: %j', err);
             return;
@@ -97,7 +97,7 @@ Commands.prototype.create = function(cmdEntry) {
             return;
         }
 
-        global.mush.players.createPlayer(playerName, hash, function(err, newPlayer) {
+        global.mush.playerdb.createPlayer(playerName, hash, function(err, newPlayer) {
             if (err) {
                 log.error('Commands.create: %j', err);
                 assert.ok(is.nonEmptyStr(err));
@@ -134,7 +134,7 @@ Commands.prototype.describe = function(cmdEntry) {
     var descText = ary[1];      // the text of the description
 
     if (target === 'here') {
-        global.mush.objects.findById(cmdEntry.conn.player.loc, function(err) {
+        global.mush.objectdb.findById(cmdEntry.conn.player.loc, function(err) {
             if (err) return log.error('Commands.describe objects.findById: %j', err);
             cmdEntry.conn.socket.write('Not yet supported\n');
             return;
@@ -161,7 +161,7 @@ Commands.prototype.look = function(cmdEntry) {
         target = cmdEntry.cmdAry[1];
 
     if (target === 'here') {
-        global.mush.objects.findById(cmdEntry.conn.player.loc, function(err, obj) {
+        global.mush.objectdb.findById(cmdEntry.conn.player.loc, function(err, obj) {
             if (err) return log.error('Commands.look objects.findById: %j', err);
             cmdEntry.conn.socket.write(sprintf('%s(#%d)\n%s\n', obj.name, obj.id, obj.desc));
             return;

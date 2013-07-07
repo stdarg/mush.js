@@ -58,7 +58,7 @@ PlayerDb.prototype.createPlayer = function(playerName, hash, cb) {
     player.sex = 'n';
     player.last = player.cdate;
     player.desc = 'You see a person with many possibilities.';
-    player.id = mush.data.getNextId();
+    player.id = mush.gamedb.getNextId();
     player.owner = player.id;
     // FIXME: Have a definition of where the start room is.
     player.loc = 0;

@@ -36,11 +36,11 @@ function ObjectDb(cb) {
                 return cb(undefined, self);
 
             assert.ok(is.obj(global.mush));
-            assert.ok(is.obj(global.mush.data));
+            assert.ok(is.obj(global.mush.gamedb));
 
             // empty db, create #0
             var room = {};
-            room.id = global.mush.data.getNextId();
+            room.id = global.mush.gamedb.getNextId();
             log.info('room id: '+room.id);
             assert.ok(is.int(room.id));
             assert.ok(room.id === 0);

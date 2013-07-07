@@ -49,8 +49,8 @@ function getPlayerDb(cb) {
         }
         assert.ok(global.mush);
         log.info('Got the player collection.');
-        global.mush.players = players;
-        assert.ok(global.mush.players);
+        global.mush.playerdb = players;
+        assert.ok(is.nonEmptyObj(global.mush.playerdb));
         cb();
     });
 }
@@ -62,8 +62,8 @@ function getPlayerDb(cb) {
  */
 function getObjectDb(cb) {
     assert.ok(global.mush);
-    assert.ok(global.mush.data);
-    assert.ok(global.mush.data.getNextId);
+    assert.ok(global.mush.gamedb);
+    assert.ok(global.mush.gamedb.getNextId);
     new ObjectDb(function(err, objects) {
         if (err) {
             cb('There was an error connecting to the object collection.');
@@ -72,7 +72,7 @@ function getObjectDb(cb) {
 
         assert.ok(is.nonEmptyObj(objects));
 
-        global.mush.objects = objects;
+        global.mush.objectdb = objects;
         log.info('Got the object collection.');
         cb();
     });
@@ -91,7 +91,7 @@ function getGameDataDb(cb) {
             return;
         }
         log.info('Got the game data collection.');
-        global.mush.data = data;
+        global.mush.gamedb = data;
         cb();
     });
 }
@@ -108,7 +108,7 @@ function connectToDb(cb) {
         }
         assert.ok(db !== undefined);
         global.mush.db = db;
-        log.info('Connected to DB.');
+        log.info('Connected to the DB.');
         cb();
     });
 }
