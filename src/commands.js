@@ -48,7 +48,7 @@ Commands.prototype.connect = function(cmdEntry) {
     assert.ok(is.nonEmptyArray(cmdEntry.cmdAry));
 
     var playerName = cmdEntry.cmdAry[1];
-    var hash = MushUtils.createHash(cmdEntry.cmdAry[2]);
+    var hash = mush_utils.createHash(cmdEntry.cmdAry[2]);
     assert.ok(is.nonEmptyStr(playerName));
     assert.ok(is.nonEmptyStr(hash));
 
@@ -81,7 +81,7 @@ Commands.prototype.create = function(cmdEntry) {
     assert.ok(cmdEntry.cmdAry.length >= 3);
 
     var playerName = cmdEntry.cmdAry[1];
-    var hash = MushUtils.createHash(cmdEntry.cmdAry[2]);
+    var hash = mush_utils.createHash(cmdEntry.cmdAry[2]);
     assert.ok(is.nonEmptyStr(playerName));
     assert.ok(is.nonEmptyStr(hash));
 

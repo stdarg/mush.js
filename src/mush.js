@@ -10,8 +10,8 @@ var Config = require('config-js').Config;
 // set up some global objects
 global.mush = {};
 global.mush.config = new Config('../cfg/mush_config.js', 'us');
-global.MushUtils = require('./mush_utils');
-global.log = MushUtils.createLogger();
+global.mush_utils = require('./mush_utils');
+global.log = mush_utils.createLogger();
 global.is = require('is2');
 global.util = require('util');
 global.assert = require('assert');
@@ -101,7 +101,7 @@ function getGameDataDb(cb) {
  * @param {Function} cb A callback to signal the work is done
  */
 function connectToDb(cb) {
-    MushUtils.connectToMongoDb(function(err, db) {
+    mush_utils.connectToMongoDb(function(err, db) {
         if (err) {
             cb('There was an error connecting to the database.');
             return;

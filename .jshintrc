@@ -41,7 +41,7 @@
         "util"      : true,
         "assert"    : true,
         "log"       : true,
-        "MushUtils" : true,
+        "mush_utils": true,
         "spyOn"     : false,
         "it"        : false,
         "console"   : true,

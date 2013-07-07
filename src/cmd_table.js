@@ -56,7 +56,7 @@ function CommandTable() {
         dconPlayer: yesDconPlayer
     };
 
-    MushUtils.makeImmutableRecurse(this._error);
+    mush_utils.makeImmutableRecurse(this._error);
 }
 
 /**
@@ -88,7 +88,7 @@ CommandTable.prototype._addCmd = function(name, numArgs, funcHandler, connectedC
         dconPlayer: disconnectedCmd
     };
 
-    MushUtils.makeImmutableRecurse(cmdTab[name]);
+    mush_utils.makeImmutableRecurse(cmdTab[name]);
     log.debug('Command: %s', name);
     if (!makeShortAliases) return;
 

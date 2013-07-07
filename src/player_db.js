@@ -26,7 +26,7 @@ function PlayerDb(cb) {
                 return cb(err, self);
 
             // create god
-            self.createPlayer('God', MushUtils.createHash('potrzebie'), function(err, god) {
+            self.createPlayer('God', mush_utils.createHash('potrzebie'), function(err, god) {
                 if (err)
                     return cb(err, self);
 
