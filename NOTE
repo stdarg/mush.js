@@ -1,5 +1,0 @@
-* Make the room #0 and God #1 for fuck's sake.
-* Replace the fucking asserts? Or keep?
-* Create a data-level abstraction layer. Collection Object?
-* Make all @api private methods use a '_' prefix.
-
