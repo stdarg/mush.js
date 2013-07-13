@@ -22,7 +22,7 @@ function Connection(socket, server, id) {
     this.socket = socket;
     this.connectionId = id;
     this.player = new Player();
-    this.loginTime = new Date();
+    this.loginTime = Date.now();
     this.setSocketEvents();
 }
 

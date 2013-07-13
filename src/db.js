@@ -142,14 +142,15 @@ Db.prototype.findBy_Id = function(id, cb) {
  * object in the Db.
  * @param {object} obj An object representing the document to be updated.
  * @param {string[]} [fields] An array of strings, indicating which fields to update (optional)
- * @param {string} cb The call to execute when done, returns the error or obj document.
+ * @param {function} cb The call to execute when done, returns the error or obj document.
  */
 Db.prototype.update = function(obj, fields, cb) {
     log.info('Db.update: %j', obj);
     assert.ok(is.object(obj));
     assert.ok(this.dbCollection);
     assert.ok(is.object(obj));
-    assert.ok(is.obj(obj._id));
+    log.error('type obj._id: %s', typeof obj._id);
+    log.error('obj._id: %j', obj._id);
     assert.ok(is.func(cb));
 
     var set = {};
@@ -167,15 +168,14 @@ Db.prototype.update = function(obj, fields, cb) {
         }
     }
 
-    this.dbCollection.update({_id: obj._id}, set, {safe: true}, function(err, updatedObj) {
+    //var ObjectID = require('mongodb').ObjectID;
+    this.dbCollection.update({_id: obj._id}, set, {safe: true}, function(err) {
         if (err) {
             assert.ok(is.nonEmptyStr(err));
             log.error('Error: Db.update: '+err);
             return;
         }
-        if (is.array(updatedObj))
-            updatedObj = updatedObj[0];
-        cb(null, updatedObj);
+        cb(null);
     });
 };
 

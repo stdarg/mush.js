@@ -24,10 +24,38 @@ function Player() {
  * login - log a player in
  * @param {Object} dbObj A db object with the player data.
  */
-Player.prototype.login = function(dbObj) {
+Player.prototype.login = function(dbObj, socket) {
+    assert.ok(is.nonEmptyObj(dbObj));
+    assert.ok(is.nonEmptyObj(socket));
+
+    if (!dbObj.type)
+        dbObj.type = 'p';
+
+    log.warn('Player.login: %j', dbObj);
+
     this.loadFromDb(dbObj);
     this.setFlag('connected', true);
-    // FIXME: handle LOGIN-based attributes
+
+    this.data.LAST = Date.now();
+    if (!this.data.FIRST)
+        this.data.FIRST = Date.now();
+
+    this.data.LASTIP = String(socket.remoteAddress);
+    /*
+    var dns = require('dns');
+    dns.reverse(this.data.LAST, function(err, domains) {
+        if (err) {
+            log.error('Player.login dns.reverse: %j', err);
+            return;
+        }
+        if (domains.length > 0) {
+            this.data.LASTSITE = domains;
+            this.saveToDb();
+        }
+    });
+    */
+
+    this.saveToDb();
 };
 
 Player.prototype.isConnected = function() {
@@ -43,7 +71,11 @@ Player.prototype.isDisconnected = function() {
  */
 Object.defineProperty(Obj.prototype, 'LAST', {
     get: function() { return this.data.LAST; },
-    set: function(l) { this.data.LAST = l; return this; }
+    set: function(l) {
+        assert.ok(is.positiveInt(l));
+        this.data.LAST = l;
+        this.saveToDb();
+    }
 });
 
 /**
@@ -51,7 +83,10 @@ Object.defineProperty(Obj.prototype, 'LAST', {
  */
 Object.defineProperty(Obj.prototype, 'LASTSITE', {
     get: function() { return this.data.LASTSITE; },
-    set: function(l) { this.data.LASTSITE = l; return this; }
+    set: function(l) {
+        this.data.LASTSITE = l;
+        this.saveToDb();
+    }
 });
 
 /**
@@ -59,7 +94,11 @@ Object.defineProperty(Obj.prototype, 'LASTSITE', {
  */
 Object.defineProperty(Obj.prototype, 'LASTIP', {
     get: function() { return this.data.LASTIP; },
-    set: function(l) { this.data.LASTIP = l; return this; }
+    set: function(l) {
+        assert.ok(is.nonEmptyStr(l));
+        this.data.LASTIP = l;
+        this.saveToDb();
+    }
 });
 
 /**
@@ -67,7 +106,11 @@ Object.defineProperty(Obj.prototype, 'LASTIP', {
  */
 Object.defineProperty(Obj.prototype, 'FIRST', {
     get: function() { return this.data.FIRST; },
-    set: function(f) { this.data.FIRST = f; return this; }
+    set: function(f) {
+        assert.ok(is.positiveInt(f));
+        this.data.FIRST = f;
+        this.saveToDb();
+    }
 });
 
 /**
@@ -76,5 +119,9 @@ Object.defineProperty(Obj.prototype, 'FIRST', {
  */
 Object.defineProperty(Obj.prototype, 'FIRSTSITE', {
     get: function() { return this.data.FIRSTSITE; },
-    set: function(f) { this.data.FIRSTSITE = f; return this; }
+    set: function(f) {
+        assert.ok(is.nonEmptyStr(f));
+        this.data.FIRSTSITE = f;
+        this.saveToDb();
+    }
 });

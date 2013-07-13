@@ -60,3 +60,11 @@ Flags.prototype.getFlagStr = function() {
 Flags.prototype.export = function() {
     return this.BitFlags.export();
 };
+
+/**
+ * Import the saved flags
+ * @return {Object} An object with 2 properties, bits & length.
+ */
+Flags.prototype.import = function(obj) {
+    return this.BitFlags.import(obj);
+};

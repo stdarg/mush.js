@@ -30,6 +30,8 @@ exports.createHash = function(strIn) {
  * @return {Object} An independent copy of the object without references.
  */
 exports.clone = function(obj) {
+    log.warn('typeof obj: '+typeof obj);
+    log.warn('clone obj: '+util.inspect(obj));
     assert.ok(is.obj(obj));
     return JSON.parse(JSON.stringify(obj));
 };

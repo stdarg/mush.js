@@ -46,7 +46,7 @@ function ObjectDb(cb) {
             assert.ok(room.id === 0);
             room.name = 'The Void';
             room.type = 'r';
-            room.desc = 'You stand at the precipice of creation at an '+
+            room.desc = 'You stand at the precipice of creation upon an '+
                         'intersection of countless possibilities.';
             room.loc = 0;
 

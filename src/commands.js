@@ -65,7 +65,7 @@ Commands.prototype.connect = function(cmdEntry) {
             return;
         }
 
-        cmdEntry.conn.player.login(player);
+        cmdEntry.conn.player.login(player, cmdEntry.conn.socket);
         global.mush.Server.queCmdOutput(cmdEntry, player.name+' has connected.');
     });
 };
@@ -106,7 +106,7 @@ Commands.prototype.create = function(cmdEntry) {
 
             assert.ok(is.object(newPlayer));
             assert.ok(is.nonEmptyStr(newPlayer.name));      // FIXME
-            cmdEntry.conn.player.login(newPlayer);
+            cmdEntry.conn.player.login(newPlayer, cmdEntry.conn.socket);
             global.mush.Server.queCmdOutput(cmdEntry, newPlayer.name+' has connected.');
         });
     });

@@ -27,6 +27,20 @@ function Obj(type) {
     } else {
         log.error('Bad Object constructor args: %j', arguments);
     }
+
+    if (!this.data.type) {
+        log.error('No type');
+        console.trace();
+    }
+
+    if (!this.data.CREATED)
+        this.data.CREATED = Date.now();
+
+    if (!this.data.sex)
+        this.data.sex = 'neuter';
+
+    // FIXME: Awkward, duplication of saving in derived classes
+    //this.saveToDb();
 }
 
 /**
@@ -79,6 +93,8 @@ Obj.prototype.loadFromDb = function(dbObj) {
     }
 
     if (dbObj.flags && dbObj.flags.bits && dbObj.flags.length) {
+        if (!this.flags)
+            this.flags = new Flags();
         this.flags.import(dbObj.flags);
         delete dbObj.flags;
     }
@@ -93,20 +109,40 @@ Obj.prototype.loadFromDb = function(dbObj) {
  * Method to write all the attributes to disk.
  * @param {Object} ddobj An object holding all the properties.
  */
-/*
 Obj.prototype.saveToDb = function() {
 
-    assert.ok(is.nonEmptyObj(this.data));
+    if (!this.data._id)
+        return;
 
-    if (dbObj.flags && dbObj.flags.bits && dbObj.flags.length) {
-        this.flags.import(dbObj.flags);
-        delete dbObj.flags;
+    var db;
+    switch (this.type) {
+    case 'r':
+    case 'o':
+    case 'e':
+        db =  global.mush.objectdb;
+        break;
+    case 'p':
+        db =  global.mush.playerdb;
+        break;
     }
 
-    assert.ok(dbObj.name && dbObj.name.length);
-    this.data = dbObj;
+    console.trace();
+    log.warn('this.type: %j', this.type);
+    assert.ok(is.nonEmptyObj(db));
+    assert.ok(is.nonEmptyObj(this.data));
+
+    var updateAllFields; //  = undefined;
+    var self = this;
+    log.warn('this.data: '+util.inspect(this.data));
+    db.update(this.data, updateAllFields, function(err) {
+        if (err) {
+            log.error('Obj.saveToDb: %j', err);
+            return;
+        }
+        self.db = mush_utils.clone(self.data);
+    });
 };
-*/
+
 ////////////////////////////////////////////////////////////////////////////////
 // Getters and setters for all the object-derived attributes follow.
 // The following use the method defineProperty on the Object prototype to create
@@ -118,7 +154,12 @@ Obj.prototype.saveToDb = function() {
  */
 Object.defineProperty(Obj.prototype, 'loc', {
     get: function() { return this.data.loc; },
-    set: function(l) { this.data.loc = l; return this; }
+    set: function(l) {
+        assert(is.int(l) && l >= 0);
+        this.data.loc = l;
+        this.saveToDb();
+        return this;
+    }
 });
 
 /**
@@ -126,7 +167,11 @@ Object.defineProperty(Obj.prototype, 'loc', {
  */
 Object.defineProperty(Obj.prototype, 'name', {
     get: function() { return this.data.name; },
-    set: function(n) { this.data.name = n; return this; }
+    set: function(n) {
+        assert(is.nonEmptyStr(n));
+        this.data.name = n;
+        this.saveToDb();
+    }
 });
 
 /**
@@ -143,7 +188,11 @@ Object.defineProperty(Obj.prototype, 'type', {
  */
 Object.defineProperty(Obj.prototype, 'sex', {
     get: function() { return this.data.sex; },
-    set: function(s) { this.data.sex = s; return this; }
+    set: function(s) {
+        assert.ok(is.str(s) && (s === 'male' || s === 'female' || s === 'neuter' || s === 'plural'));
+        this.data.sex = s;
+        this.saveToDb();
+    }
 });
 
 /**
@@ -151,7 +200,11 @@ Object.defineProperty(Obj.prototype, 'sex', {
  */
 Object.defineProperty(Obj.prototype, 'desc', {
     get: function() { return this.data.desc; },
-    set: function(d) { this.data.desc = d; return this; }
+    set: function(d) {
+        assert.ok(is.str(d));
+        this.data.desc = d;
+        this.saveToDb();
+    }
 });
 
 /**
@@ -159,7 +212,11 @@ Object.defineProperty(Obj.prototype, 'desc', {
  */
 Object.defineProperty(Obj.prototype, 'owner', {
     get: function() { return this.data.owner; },
-    set: function(o) { this.data.owner = o; return this; }
+    set: function(o) {
+        assert.ok(is.int(o) && o >= 0);
+        this.data.owner = o;
+        this.saveToDb();
+    }
 });
 
 /**
@@ -167,7 +224,11 @@ Object.defineProperty(Obj.prototype, 'owner', {
  */
 Object.defineProperty(Obj.prototype, 'id', {
     get: function() { return this.data.id; },
-    set: function(i) { this.data.Id = i; return this; }
+    set: function(i) {
+        assert.ok(is.int(i) && i >= 0);
+        this.data.Id = i;
+        this.saveToDb();
+    }
 });
 
 /**
@@ -175,7 +236,11 @@ Object.defineProperty(Obj.prototype, 'id', {
  */
 Object.defineProperty(Obj.prototype, 'CREATED', {
     get: function() { return this.data.CREATED; },
-    set: function(c) { this.data.CREATED = c; return this; }
+    set: function(c) {
+        assert.ok(is.positiveInt(c));
+        this.data.CREATED = c;
+        this.saveToDb();
+    }
 });
 
 /**
