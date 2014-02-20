@@ -14,5 +14,5 @@ util.inherits(Exit, Obj);
  * @constructor
  */
 function Exit() {
-    Exit.super_.call(this, 'r');
+    Exit.super_.call(this, 'e');
 }
