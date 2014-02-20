@@ -37,7 +37,8 @@ function CommandTable() {
     this._addCmd('quit',        0, Commands.prototype.quit,     yesConPlayer, yesDconPlayer, NOshortAliases);
     this._addCmd('say',         1, Commands.prototype.say,      yesConPlayer, noDconPlayer,  shortAliases);
     this._addCmd('who',         0, Commands.prototype.who,      yesConPlayer, yesDconPlayer, shortAliases);
-    this._addCmd('@describe',   0, Commands.prototype.describe, yesConPlayer, yesDconPlayer, shortAliases);
+    this._addCmd('@describe',   0, Commands.prototype.describe, yesConPlayer, noDconPlayer,  shortAliases);
+    this._addCmd('@dig',        0, Commands.prototype.dig,      yesConPlayer, noDconPlayer,  shortAliases);
 
     // additional aliases
     this._makeAlias('who',     'WHO');
