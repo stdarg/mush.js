@@ -4,7 +4,7 @@
  * connection object also conatains the Player object.
  */
 'use strict';
-var Player = require('./player').Player;
+var Player = require('./player');
 exports.Connection = Connection;
 
 /**
@@ -21,7 +21,8 @@ function Connection(socket, server, id) {
     this.server = server;
     this.socket = socket;
     this.connectionId = id;
-    this.player = new Player();
+    this.player = null;
+    log.error('this.player %s',inspect(this.player,{depth:null,colors:true}));
     this.loginTime = Date.now();
     this.setSocketEvents();
 }
@@ -59,4 +60,27 @@ Connection.prototype.timeOnlineSecs = function() {
     var now = new Date();
     var diff = now - this.loginTime;
     return Math.floor(diff/1000.0);
+};
+
+/**
+ * login - log a player into the mush
+ * @param {Object} dbObj A db object with the player data.
+ */
+Connection.prototype.login = function(player, socket) {
+    var self = this;
+    assert.ok(is.nonEmptyObj(player));
+    assert.ok(is.nonEmptyObj(socket));
+    var PlayerType = require('./player');
+    assert.ok(player instanceof PlayerType);
+    self.player = player;
+
+    log.warn('Player.login: %j', player);
+    player.setFlag('connected', true);
+
+    self.player.data.LAST = Date.now();
+    if (!self.player.data.FIRST)
+        self.player.data.FIRST = Date.now();
+
+    self.player.data.LASTIP = String(socket.remoteAddress);
+    player.saveToDb();
 };

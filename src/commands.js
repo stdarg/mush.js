@@ -51,23 +51,31 @@ Commands.prototype.connect = function(cmdEntry) {
     var hash = mush_utils.createHash(cmdEntry.cmdAry[2]);
     assert.ok(is.nonEmptyStr(playerName));
     assert.ok(is.nonEmptyStr(hash));
+    var Player = require('./player');
 
-    global.mush.playerdb.findByName(playerName, function(err, player) {
-        if (err) {
-            assert.ok(is.nonEmptyStr(err));
-            log.error('Commands.connect: %j', err);
-            return;
-        }
+    var player = mush.PlayerDir.get(playerName);
+    assert.ok(player instanceof Player);
+    log.error('player instanceof Player = %s', player instanceof Player);
+    log.error('typeof player %s', typeof player);
+    log.error('player.hash %s', player.hash);
+    console.error('player',player);
+    assert.ok(is.nonEmptyObj(player));
+    assert.ok(is.defined(player.data.hash));
+    log.warn('player %j', player);
+    if (is.nonEmptyObj(player) && is.defined(player.data.hash)) {
+        log.error('player.hash "%s"', player.hash);
+        log.error('hash "%s"', hash);
+    } else {
+        log.error('There is no player object.');
+    }
 
-        if (!player || player.hash !== hash) {
-            cmdEntry.conn.socket.write('Either the password is incorrect or there is no'+
-                                      ' player with that name.\n');
-            return;
-        }
-
-        cmdEntry.conn.player.login(player, cmdEntry.conn.socket);
-        global.mush.Server.queCmdOutput(cmdEntry, player.name+' has connected.');
-    });
+    if (!player || player.data.hash !== hash) {
+        cmdEntry.conn.socket.write('Either the password is incorrect or there is no'+
+                                  ' player with that name.\n');
+    } else {
+        cmdEntry.conn.login(player, cmdEntry.conn.socket);
+        mush.Server.queCmdOutput(cmdEntry, player.name+' has connected.');
+    }
 };
 
 /**
@@ -85,30 +93,26 @@ Commands.prototype.create = function(cmdEntry) {
     assert.ok(is.nonEmptyStr(playerName));
     assert.ok(is.nonEmptyStr(hash));
 
-    global.mush.playerdb.findByName(playerName, function(err, player) {
+    var player = mush.PlayerDir.get(playerName);
+
+    if (player) {
+        cmdEntry.conn.socket.write('There is already a player named "'+
+                                   player.name+
+                                   '". Please choose another name.\n');
+        return;
+    }
+
+    global.mush.Factory.createPlayer(playerName, hash, function(err, newPlayer) {
         if (err) {
             log.error('Commands.create: %j', err);
+            assert.ok(is.nonEmptyStr(err));
             return;
         }
 
-        if (player) {
-            cmdEntry.conn.socket.write('There is already a player named "'+player.name+
-                                       '". Please choose another name.\n');
-            return;
-        }
-
-        global.mush.playerdb.createPlayer(playerName, hash, function(err, newPlayer) {
-            if (err) {
-                log.error('Commands.create: %j', err);
-                assert.ok(is.nonEmptyStr(err));
-                return;
-            }
-
-            assert.ok(is.object(newPlayer));
-            assert.ok(is.nonEmptyStr(newPlayer.name));      // FIXME
-            cmdEntry.conn.player.login(newPlayer, cmdEntry.conn.socket);
-            global.mush.Server.queCmdOutput(cmdEntry, newPlayer.name+' has connected.');
-        });
+        assert.ok(is.object(newPlayer));
+        assert.ok(is.nonEmptyStr(newPlayer.name));      // FIXME
+        cmdEntry.conn.player.login(newPlayer, cmdEntry.conn.socket);
+        mush.Server.queCmdOutput(cmdEntry, newPlayer.name+' has connected.');
     });
 };
 
@@ -161,7 +165,7 @@ Commands.prototype.look = function(cmdEntry) {
         target = cmdEntry.cmdAry[1];
 
     if (target === 'here') {
-        global.mush.objectdb.findById(cmdEntry.conn.player.loc, function(err, obj) {
+        global.mush.db.get(cmdEntry.conn.player.loc, function(err, obj) {
             if (err) return log.error('Commands.look objects.findById: %j', err);
             cmdEntry.conn.socket.write(sprintf('%s(#%d)\n%s\n', obj.name, obj.id, obj.desc));
             return;

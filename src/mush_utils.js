@@ -37,7 +37,7 @@ exports.clone = function(obj) {
 };
 
 /**
- * Set up the global logger.
+ * Set up the global log.
  */
 exports.createLogger = function() {
 
@@ -275,4 +275,38 @@ exports.connectToMongoDb = function(cb) {
         assert.ok(err || db);
         cb(err, db);
     });
+};
+
+/**
+ * Display an error in the best way possible.
+ * @param {Error} An error object.
+ */
+exports.logErr = function(err, msg) {
+    if (is.undef(err))
+        err = new Error('mush_util.logErr received undefined error');
+    if (err.stack)
+        log.error('%s: %s', msg, err.stack);
+    else if (err.message)
+        log.error('%s: %s', msg, err.message);
+    else
+        log.error('%s: %s', msg, err);
+};
+
+exports.isValidId = function(id) {
+    if (!is.int(id))  return false;
+    if (id < 0)  return false;
+    return true;
+};
+
+/**
+ * Returns true if a valid id.
+ * @return {Boolean} true, if a valid id.
+ */
+exports.validId = function(id) {
+    if (!is.nonEmptyStr(id))
+        return false;
+    var num = parseInt(id, 10);
+    if (isNaN(num) || num < -1)
+        return false;
+    return true;
 };

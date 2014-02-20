@@ -5,8 +5,8 @@
 
 'use strict';
 
-exports.Exit = Exit;
-var Obj = require('./object').Obj;
+module.exports = Exit;
+var Obj = require('./object');
 util.inherits(Exit, Obj);
 
 /**
@@ -14,5 +14,6 @@ util.inherits(Exit, Obj);
  * @constructor
  */
 function Exit() {
-    Exit.super_.call(this, 'e');
+    //Exit.super_.call(this, 'e');
+    Obj.call(this, 'e');
 }

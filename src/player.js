@@ -5,8 +5,8 @@
 
 'use strict';
 
-exports.Player = Player;
-var Obj = require('./object').Obj;
+module.exports = Player;
+var Obj = require('./object');
 util.inherits(Player, Obj);
 
 var counter = 0;        // a counter to give Guests unique names
@@ -15,48 +15,18 @@ var counter = 0;        // a counter to give Guests unique names
  * Creates a Player object.
  * @constructor
  */
-function Player() {
-    Player.super_.call(this, 'p');
-    this.name = 'Guest_' + counter++;
+function Player(dbObj) {
+    var self = this;
+    Obj.call(self, 'p');        // call base class constructor
+
+    if (dbObj) {
+        self.loadFromDb(dbObj);
+    } else {
+        // we don't use self.name to avoid db writes.
+        self.data.name = 'Guest_' + counter++;
+    }
+    global.mush.PlayerDir.add(self);
 }
-
-/**
- * login - log a player in
- * @param {Object} dbObj A db object with the player data.
- */
-Player.prototype.login = function(dbObj, socket) {
-    assert.ok(is.nonEmptyObj(dbObj));
-    assert.ok(is.nonEmptyObj(socket));
-
-    if (!dbObj.type)
-        dbObj.type = 'p';
-
-    log.warn('Player.login: %j', dbObj);
-
-    this.loadFromDb(dbObj);
-    this.setFlag('connected', true);
-
-    this.data.LAST = Date.now();
-    if (!this.data.FIRST)
-        this.data.FIRST = Date.now();
-
-    this.data.LASTIP = String(socket.remoteAddress);
-    /*
-    var dns = require('dns');
-    dns.reverse(this.data.LAST, function(err, domains) {
-        if (err) {
-            log.error('Player.login dns.reverse: %j', err);
-            return;
-        }
-        if (domains.length > 0) {
-            this.data.LASTSITE = domains;
-            this.saveToDb();
-        }
-    });
-    */
-
-    this.saveToDb();
-};
 
 Player.prototype.isConnected = function() {
     return this.getFlag('connected');

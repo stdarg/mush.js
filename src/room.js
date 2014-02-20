@@ -6,7 +6,7 @@
 'use strict';
 
 exports.Room = Room;
-var Obj = require('./object').Obj;
+var Obj = require('./object');
 util.inherits(Room, Obj);
 
 /**
@@ -14,5 +14,6 @@ util.inherits(Room, Obj);
  * @constructor
  */
 function Room() {
-    Room.super_.call(this, 'r');
+    //Room.super_.call(this, 'r');
+    Obj.call(this, 'r');
 }

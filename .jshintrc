@@ -36,25 +36,21 @@
     "white"         : false,
 
     "globals" : {
-        "jasmine"   : false,
-        "is"        : true,
-        "util"      : true,
+        "after"     : true,
+        "afterEach" : true,
         "assert"    : true,
+        "before"    : true,
+        "beforeEach": true,
+        "describe"  : true,
+        "inspect"   : true,
+        "is"        : true,
+        "isValidId" : true,
+        "validId"   : true,
+        "it"        : true,
         "log"       : true,
-        "mush_utils": true,
-        "spyOn"     : false,
-        "it"        : false,
-        "console"   : true,
-        "logger"    : true,
-        "describe"  : false,
-        "expect"    : false,
-        "beforeEach": false,
         "mush"      : true,
+        "mush_utils": true,
         "sprintf"   : true,
-        "waits"     : false,
-        "waitsFor"  : false,
-        "runs"      : false,
-        "toString"  : true,
-        "toString.call"  : true
+        "util"      : true
     }
 }

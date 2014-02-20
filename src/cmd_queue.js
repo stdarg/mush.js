@@ -37,7 +37,6 @@ CmdQueue.prototype._processQue = function() {
     var cmdEntry = this.cmdQueue.pop();
     assert.ok(is.obj(cmdEntry));
     assert.ok(is.obj(cmdEntry.conn));
-    assert.ok(is.obj(cmdEntry.conn.player));
     var cmd = this.Parser.parseCommand(cmdEntry);
 
     if (!cmd) {
