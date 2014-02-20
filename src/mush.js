@@ -9,7 +9,9 @@ var Config = require('config-js').Config;
 
 // set up some global objects
 global.mush = {};
-global.mush.config = new Config('../cfg/mush_config.js', 'us');
+var path = require('path');
+var configFilePath = path.join(__dirname, '../cfg/mush_config.js');
+global.mush.config = new Config(configFilePath, 'us');
 global.mush_utils = require('./mush_utils');
 global.log = mush_utils.createLogger();
 global.is = require('is2');
