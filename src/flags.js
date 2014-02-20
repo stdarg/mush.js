@@ -7,7 +7,7 @@
 'use strict';
 exports.Flags = Flags;
 
-var BitArray = require('minimal-bit-array');
+var BitArray = require('./bitarray');
 var flag_tbl = require('./flag_table');
 
 /**
