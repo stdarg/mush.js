@@ -24,7 +24,6 @@ function ParseCmd() {
 ParseCmd.prototype.parseCommand = function(cmdEntry) {
     assert.ok(is.object(cmdEntry));
     assert.ok(is.object(cmdEntry.conn));
-    assert.ok(is.object(cmdEntry.conn.player));
     assert.ok(is.object(this.cmdTable));
 
     cmdEntry.cmdStr = cmdEntry.cmdStr.toString('utf8');
@@ -35,6 +34,8 @@ ParseCmd.prototype.parseCommand = function(cmdEntry) {
     // Handle 1-char cmds - these are special cases where the first
     // white-space separated token has the command followed by the input
     // with no whitespace separator, e.g. ':smiles broadly.'
+    log.info('parseCommand %j',cmdEntry.cmdAry);
+
     switch (cmdEntry.cmdStr[0]) {
     case '"':
     case '\'':
@@ -75,16 +76,19 @@ ParseCmd.prototype.parseCommand = function(cmdEntry) {
  * otherwise.
  */
 function _cmdIsValid(cmd, cmdEntry) {
+    assert.ok(is.nonEmptyObj(cmdEntry));
+    assert.ok(is.nonEmptyObj(cmdEntry.conn));
+    //assert.ok(is.nonEmptyObj(cmdEntry.conn.player));
 
     if (typeof cmd !== 'object')
         return false;
 
     // if player is connected and connected players can't use the command
-    if (cmdEntry.conn.player.isConnected() && cmd.conPlayer === false)
+    if (cmdEntry.conn.player !== null && cmd.conPlayer === false)
         return false;
 
     // if player is disconnected and disconnected players can't use the command
-    if (cmdEntry.conn.player.isDisconnected() && cmd.dconPlayer === false)
+    if (cmdEntry.conn.player === null && cmd.dconPlayer === false)
         return false;
 
     return true;

@@ -5,7 +5,7 @@
  */
 
 'use strict';
-exports.Obj = Obj;
+module.exports = Obj;
 
 var Flags = require('./flags').Flags;
 
@@ -17,7 +17,6 @@ function Obj(type) {
 
     this.data = {};
     this.data.loc = 0;
-    this.db = {};
     this.Flags = new Flags();
 
     if (arguments.length === 1 && is.nonEmptyObj(arguments[0])) {
@@ -101,46 +100,67 @@ Obj.prototype.loadFromDb = function(dbObj) {
 
     assert.ok(dbObj.name && dbObj.name.length);
     this.data = dbObj;
-    // create a clone of this.data w/out references
-    this.db = mush_utils.clone(this.data);
 };
 
 /**
  * Method to write all the attributes to disk.
  * @param {Object} ddobj An object holding all the properties.
  */
-Obj.prototype.saveToDb = function() {
-
-    if (!this.data._id)
-        return;
-
-    var db;
-    switch (this.type) {
-    case 'r':
-    case 'o':
-    case 'e':
-        db =  global.mush.objectdb;
-        break;
-    case 'p':
-        db =  global.mush.playerdb;
-        break;
-    }
+Obj.prototype.saveToDb = function(cb) {
+    var self = this;
+    assert.ok(is.nonEmptyObj(mush.db));
+    assert.ok(is.nonEmptyObj(this.data));
+    log.warn('self.data.id %s',inspect(self.data));
+    assert.ok(mush.db.validId(self.data.id));
 
     console.trace();
     log.warn('this.type: %j', this.type);
-    assert.ok(is.nonEmptyObj(db));
-    assert.ok(is.nonEmptyObj(this.data));
 
-    var updateAllFields; //  = undefined;
-    var self = this;
     log.warn('this.data: '+util.inspect(this.data));
-    db.update(this.data, updateAllFields, function(err) {
+    mush.db.put(self, function(err) {
         if (err) {
-            log.error('Obj.saveToDb: %j', err);
+            log.error('Obj.saveToDb: %s', err.stack);
+            if (err)  return cb(err);
             return;
         }
-        self.db = mush_utils.clone(self.data);
+        if (cb) return cb();
     });
+};
+
+/**
+ * Create a JSON string
+ * @returns {Object} customized object to convert to a string.
+ */
+Obj.prototype.toJSON = function() {
+    var self = this;
+    var obj = {
+        id: self.data.id,
+        name: self.data.name,
+        type: self.data.type,
+        flags: self.Flags.export(),
+        desc: self.data.desc,
+        owner: self.data.owner,
+        CREATED: self.data.CREATED,
+    };
+
+    if (self.type !== 'r') {
+        obj.loc = self.data.loc;
+        obj.HOME = self.data.HOME;
+    }
+
+    if (self.type !== 'e' && self.type !== 'r')
+        obj.sex = self.data.sex;
+
+    if (self.type === 'p') {
+        obj.LAST = self.data.LAST;
+        obj.LASTSITE = self.data.LASTSITE;
+        obj.LASTIP = self.data.LASTIP;
+        obj.FIRST = self.data.FIRST;
+        obj.FIRSTSITE = self.data.FIRSTSITE;
+        obj.hash = self.data.hash;
+    }
+
+    return obj;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -5,28 +5,8 @@
  * server.
  */
 'use strict';           // Forces better usage of JavaScript.
-var Config = require('config-js').Config;
-
-// set up some global objects
-global.mush = {};
-var path = require('path');
-var configFilePath = path.join(__dirname, '../cfg/mush_config.js');
-global.mush.config = new Config(configFilePath, 'us');
-global.mush_utils = require('./mush_utils');
-global.log = mush_utils.createLogger();
-global.is = require('is2');
-global.util = require('util');
-global.assert = require('assert');
-require('sprintf.js');   // adds a sprintf in the global-scope and a printf on string objs
-
 var async = require('async');
-var PlayerDb = require('./player_db').PlayerDb;
-var GameDataDb = require('./game_data_db').GameDataDb;
-var ObjectDb = require('./object_db').ObjectDb;
 var Server = require('./server').Server;
-
-// This is where the aplication code starts running
-main();
 
 /**
  * Start the mush.
@@ -40,79 +20,72 @@ function startTheMush() {
 }
 
 /**
- * save the object collection into the global mush object
- * @param {Function} cb A callback to signal the work is done
+ *
  */
-function getPlayerDb(cb) {
-    new PlayerDb(function(err, players) {
-        if (err) {
-            cb('There was an error connecting to the player collection.');
-            return;
-        }
-        assert.ok(global.mush);
-        log.info('Got the player collection.');
-        global.mush.playerdb = players;
-        assert.ok(is.nonEmptyObj(global.mush.playerdb));
-        cb();
+function createTheVoid(cb) {
+    var theVoid = {
+        id: mush.db.getNextId(),
+        name: 'The Void',
+        type: 'r',
+        flags: 0,
+        desc: 'You stand at the precipice of creation upon an '+
+              'intersection of countless possibilities.',
+        owner: '1',
+        CREATED: Date.now()
+    };
+    mush.db.put(theVoid, function(err) {
+        if (err)  mush_utils.logErr(err);
+        cb(err);
     });
 }
 
 /**
- * Get the object colection, which contains rooms, exits and objects
- * and places the collection in the global scope.
- * @param {Function} cb A callback to signal the work is done
+ *
  */
-function getObjectDb(cb) {
-    assert.ok(global.mush);
-    assert.ok(global.mush.gamedb);
-    assert.ok(global.mush.gamedb.getNextId);
-    new ObjectDb(function(err, objects) {
-        if (err) {
-            cb('There was an error connecting to the object collection.');
-            return;
-        }
-
-        assert.ok(is.nonEmptyObj(objects));
-
-        global.mush.objectdb = objects;
-        log.info('Got the object collection.');
-        cb();
+function createGod(cb) {
+    var god = {
+        id: mush.db.getNextId(),
+        name: 'God',
+        type: 'p',
+        flags: 0,
+        desc: 'You see an embodiment of the cosmos.',
+        owner: '1',
+        CREATED: Date.now(),
+        loc: '0',
+        hash: mush_utils.createHash('potrzebie')
+    };
+    var PlayerType = require('./player');
+    var player = new PlayerType(god);
+    assert.ok(player instanceof PlayerType);
+    player.saveToDb(cb);
+    /*
+    mush.db.put(god, function(err) {
+        if (err)  mush_utils.logErr(err);
+        cb(err);
     });
+    */
 }
 
 /**
- * Get the game data db which has the freelist and the next available dbref and
- * place it in the global scope.
- * @param {Function} cb A callback to signal the work is done
+ *
  */
-function getGameDataDb(cb) {
-    assert.ok(global.mush);
-    new GameDataDb(function(err, data) {
-        if (err) {
-            cb('There was an error connecting to the game data collection: ');
-            return;
-        }
-        log.info('Got the game data collection.');
-        global.mush.gamedb = data;
-        cb();
-    });
-}
+function seedDb(cb) {
+    if (!mush.db.isEmpty())  return cb();
 
-/**
- * save the db connection to the global mush object.
- * @param {Function} cb A callback to signal the work is done
- */
-function connectToDb(cb) {
-    mush_utils.connectToMongoDb(function(err, db) {
-        if (err) {
-            cb('There was an error connecting to the database.');
-            return;
+    async.parallel([
+            createTheVoid,
+            createGod
+        ],
+        function(err) {
+            if (err) {
+                console.error(err);
+                process.exit(2);
+                return;
+            }
+            cb();
         }
-        assert.ok(db !== undefined);
-        global.mush.db = db;
-        log.info('Connected to the DB.');
-        cb();
-    });
+    );
+
 }
 
 /**
@@ -123,11 +96,8 @@ function main() {
 
     // execute a set of function sequentially, and then execute the callback
     // which is an anonymous function that starts the mush.
-    async.series( [
-            connectToDb,                // must be first
-            getGameDataDb,      // must be second
-            getObjectDb,
-            getPlayerDb,
+    async.series([
+            seedDb
         ],
 
         function(err) {
@@ -139,3 +109,5 @@ function main() {
         }
     );
 }
+
+module.exports = { main: main };

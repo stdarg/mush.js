@@ -87,14 +87,16 @@ Server.prototype.handleInput = function(conn, data) {
 Server.prototype.start = function() {
     var self = this;
 
-    this.server = net.createServer(function(socket) {
-
+    function handleConnection(socket) {
         log.info('A client connected.');
         socket.write('Welcome to mush.js.\r\n');
 
-        self.ConnectionList[self.nextConId] = new Connection(socket, self, self.nextConId);
+        self.ConnectionList[self.nextConId] = new Connection(socket, self,
+                                                             self.nextConId);
         self.nextConId++;
-    });
+    }
+
+    this.server = net.createServer(handleConnection);
 
     var port = global.mush.config.get('server.port', 4201);
     this.server.listen(port, function() { //'listening' listener
