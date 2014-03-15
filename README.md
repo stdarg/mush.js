@@ -20,12 +20,19 @@ source files interdependent, but my thought is, if the project is really
 worthwhile, I'll take the time later and refactor it.
 
 # Requirements
-
 This project requires the following to be installed:
 
 * [Node.js] (http://nodejs.org/ "The Node.js website")
 * [LevelDB] (https://code.google.com/p/leveldb/ "Download LevelDB")
 
+# Running
+To run the mush, do the following:
 
+1. Change your directory to the mush.js directory, where the package.json
+   resides: `cd ./mush.js`, then do the following steps in this directory.
+2. Install the dependencies: `npm install`
+3. Run the mush:  `node app.js`
+4. Connect to the mush:  `telnet localhost 4201`
+5. Login as God: `connect God potrzebie`
 
 
