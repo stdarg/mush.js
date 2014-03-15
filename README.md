@@ -13,11 +13,19 @@ chat-server with some persistence.
 Currently, I am flushing out the data model for the objects and adding
 persistence for the objects.
 
+# Warning
+The code design is a bit ... ugly due to a dependance on globals. It mirrors my
+vague recollection of TinyMUSH which I'm using as model. The globals make it the
+source files interdependent, but my thought is, if the project is really
+worthwhile, I'll take the time later and refactor it.
+
 # Requirements
 
 This project requires the following to be installed:
 
 * [Node.js] (http://nodejs.org/ "The Node.js website")
-* [LevelDB] (https://code.google.com/p/leveldb/ "The Google Code Site")
+* [LevelDB] (https://code.google.com/p/leveldb/ "Download LevelDB")
+
+
 
 
