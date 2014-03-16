@@ -13,8 +13,9 @@ var Flags = require('./flags').Flags;
  * The Obj class is a the base class for all object types (except Objects).
  * @constructor
  */
-function Obj(type) {
+function Obj(type, obj) {
 
+    log.info('In Obj constructor with type "%s"', type);
     this.data = {};
     this.data.loc = 0;
     this.Flags = new Flags();
@@ -38,8 +39,9 @@ function Obj(type) {
     if (!this.data.sex)
         this.data.sex = 'neuter';
 
-    // FIXME: Awkward, duplication of saving in derived classes
-    //this.saveToDb();
+    if (is.nonEmptyObj(obj))
+        this.loadFromDb(obj);
+
 }
 
 /**
@@ -110,7 +112,8 @@ Obj.prototype.saveToDb = function(cb) {
     var self = this;
     assert.ok(is.nonEmptyObj(mush.db));
     assert.ok(is.nonEmptyObj(this.data));
-    log.warn('self.data.id %s',inspect(self.data));
+    log.warn('self %s',inspect(self));
+    log.warn('self.data %s',inspect(self.data));
     assert.ok(mush.db.validId(self.data.id));
 
     console.trace();

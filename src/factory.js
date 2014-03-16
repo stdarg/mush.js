@@ -24,13 +24,39 @@ module.exports = function() {
 function Factory() {
 }
 
+Factory.prototype.loadId = function(id, cb) {
+    var self = this;
+    if (is.number(id)) id=id+'';
+    log.info('Factory.loadId id=%s', id);
+
+    // is the obj a valid key?
+    if (!mush.db.validId(id)) {
+        // then load the object
+        process.nextTick( function() { cb(new Error('Factory loadId invalid id: '+id)); });
+        return;
+    }
+
+    assert.ok(is.nonEmptyObj(mush.db));
+    mush.db.get(id, function(err, obj) {
+        if (err) return cb(err);
+        assert.ok(is.nonEmptyObj(obj));
+        assert.ok(is.nonEmptyStr(obj.type));
+        assert.ok(is.nonEmptyStr(obj.id));
+        var gameObj = self.load(obj);
+        assert.ok(is.nonEmptyObj(gameObj));
+        cb(null, gameObj);
+    });
+};
+
+
 /**
  * Factory to create game objects from JSON representation in db.
- * @param {Object} obj DB object representation.
+ * @param {Object|String} obj DB object representation or an integer to load from the db.
  * @return {Object} The game object, i.e. exit, player, object or room.
  */
 Factory.prototype.load = function(obj) {
     var self = this;
+
     assert.ok(is.nonEmptyObj(obj));
     assert.ok(is.nonEmptyStr(obj.type));
     var gameObj;

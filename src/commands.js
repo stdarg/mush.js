@@ -140,17 +140,18 @@ Commands.prototype.describe = function(cmdEntry) {
     var descText = ary[1];      // the text of the description
 
     if (target === 'here') {
-        global.mush.objectdb.findById(cmdEntry.conn.player.loc, function(err) {
+        global.mush.Factory.loadId(cmdEntry.conn.player.loc, function(err, obj) {
             if (err) return log.error('Commands.describe objects.findById: %j', err);
-            cmdEntry.conn.socket.write('Not yet supported\n');
-            return;
+            var resp = sprintf('You describe #%s as: %s\n', obj.id, descText);
+            cmdEntry.conn.socket.write(resp);
+            obj.desc = descText;
         });
     } else if (target === 'me') {
         var obj = cmdEntry.conn.player;
         cmdEntry.conn.socket.write(sprintf('You describe yourself: %s\n', descText));
         obj.desc = descText;
     } else {
-        cmdEntry.conn.socket.write(sprintf('ary: %s\n', util.inspect(cmdEntry)));
+        cmdEntry.conn.socket.write(sprintf('There is no "%s" here.\n', target));
     }
 };
 

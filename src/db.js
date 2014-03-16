@@ -170,6 +170,8 @@ Db.prototype.storeObjData = function(obj) {
  */
 Db.prototype.get = function(id, cb) {
     var self = this;
+    if (is.int(id))         // convert numeric id to str
+        id = id+'';
     log.info('Db.get id: %s',id);
     assert.ok(self.validId(id));
     assert.ok(is.func(cb));
