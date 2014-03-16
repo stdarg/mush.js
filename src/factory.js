@@ -158,6 +158,7 @@ Factory.prototype.createNewPlayer = function(playerName, hash, cb) {
     player.cdate = new Date();
     player.hash = hash;
     player.sex = 'n';
+    player.type = 'p';
     player.last = player.cdate;
     player.desc = 'You see someone with many possibilities.';
     player.id = mush.db.getNextId();
