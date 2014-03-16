@@ -120,7 +120,7 @@ Factory.prototype.createObj = function(name, ownerId, cb) {
  * @param {Object} obj DB object representation.
  * @return {Player} An object of type Player.
  */
-Factory.prototype.createPlayer = function(playerObj, cb) {
+Factory.prototype.playerFromDbObj = function(playerObj, cb) {
     var self = this;
     log.warn('Obj: %j', playerObj);
     assert.ok(is.nonEmptyObj(playerObj));
@@ -144,8 +144,8 @@ Factory.prototype.createPlayer = function(playerObj, cb) {
 
 /**
  * Create a new player object.
- * @param {Object} obj DB object representation.
- * @return {Player} An object of type Player.
+ * @param {String} playerName The name of the new player.
+ * @return {String} hash The player password.
  */
 Factory.prototype.createNewPlayer = function(playerName, hash, cb) {
     var self = this;
@@ -176,3 +176,49 @@ Factory.prototype.createNewPlayer = function(playerName, hash, cb) {
         cb(null, PlayerObj);
     });
 };
+
+/**
+ * Create the first room in the game #0.
+ * @param {Function} cb Callback of type fn(err);
+ */
+Factory.prototype.createGod =  function(cb) {
+    var god = {
+        id: mush.db.getNextId(),
+        name: 'God',
+        type: 'p',
+        flags: 0,
+        desc: 'You see the embodiment of the cosmos.',
+        CREATED: Date.now(),
+        loc: '0',
+        hash: mush_utils.createHash('potrzebie')
+    };
+    god.owner = god.id;
+    assert.ok(god.id === '1');
+    var PlayerType = require('./player');
+    var player = new PlayerType(god);
+    assert.ok(player instanceof PlayerType);
+    player.saveToDb(cb);
+};
+
+/**
+ * Creates the first player in the game #1
+ * @param {Function} cb Callback of type fn(err);
+ */
+Factory.prototype.createTheVoid = function(cb) {
+    var theVoid = {
+        id: mush.db.getNextId(),
+        name: 'The Void',
+        type: 'r',
+        flags: 0,
+        desc: 'You stand at the precipice of creation upon an '+
+              'intersection of countless possibilities.',
+        owner: '1',
+        CREATED: Date.now()
+    };
+    assert.ok(theVoid.id === '0');
+    mush.db.put(theVoid, function(err) {
+        if (err)  mush_utils.logErr(err);
+        cb(err);
+    });
+};
+

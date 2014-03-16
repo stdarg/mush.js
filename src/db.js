@@ -149,7 +149,7 @@ Db.prototype.storeObjData = function(obj) {
     assert.ok(self.validId(obj.id));
     self.objArray[obj.id] = {};
     if (obj.type === 'p') {
-        mush.Factory.createPlayer(obj, function(err) {
+        mush.Factory.playerFromDbObj(obj, function(err) {
             if (err) mush_utils.logErr('Db.storeObjData', err);
         });
     }
@@ -170,6 +170,7 @@ Db.prototype.storeObjData = function(obj) {
  */
 Db.prototype.get = function(id, cb) {
     var self = this;
+    log.info('Db.get id: %s',id);
     assert.ok(self.validId(id));
     assert.ok(is.func(cb));
     assert.ok(is.nonEmptyObj(self.db));
@@ -257,11 +258,15 @@ Db.prototype.getNextId = function() {
  */
 Db.prototype.validId = function(id) {
     var self = this;
-    if (!is.nonEmptyStr(id))
+    if (!is.nonEmptyStr(id)) {
+        log.error('id is not a string: "%s"',typeof id);
         return false;
+    }
     var num = parseInt(id, 10);
     log.info('num=%d, self.nextId=%d', num, self.nextId);
-    if (isNaN(num) || num < -1 || num >= self.nextId)
+    if (isNaN(num) || num < -1 || num >= self.nextId) {
+        log.error('id is not a number between -1 and %d: %s',self.nextId, id);
         return false;
+    }
     return true;
 };

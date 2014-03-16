@@ -54,14 +54,16 @@ Commands.prototype.connect = function(cmdEntry) {
     var Player = require('./player');
 
     var player = mush.PlayerDir.get(playerName);
-    assert.ok(player instanceof Player);
-    log.error('player instanceof Player = %s', player instanceof Player);
-    log.error('typeof player %s', typeof player);
-    log.error('player.hash %s', player.hash);
-    console.error('player',player);
-    assert.ok(is.nonEmptyObj(player));
-    assert.ok(is.defined(player.data.hash));
-    log.warn('player %j', player);
+    if (player) {
+        assert.ok(player instanceof Player);
+        log.error('player instanceof Player = %s', player instanceof Player);
+        log.error('typeof player %s', typeof player);
+        log.error('player.hash %s', player.hash);
+        console.error('player',player);
+        assert.ok(is.nonEmptyObj(player));
+        assert.ok(is.defined(player.data.hash));
+        log.warn('player %j', player);
+    }
     if (is.nonEmptyObj(player) && is.defined(player.data.hash)) {
         log.error('player.hash "%s"', player.hash);
         log.error('hash "%s"', hash);
@@ -102,7 +104,7 @@ Commands.prototype.create = function(cmdEntry) {
         return;
     }
 
-    global.mush.Factory.createPlayer(playerName, hash, function(err, newPlayer) {
+    global.mush.Factory.createNewPlayer(playerName, hash, function(err, newPlayer) {
         if (err) {
             log.error('Commands.create: %j', err);
             assert.ok(is.nonEmptyStr(err));
@@ -111,7 +113,7 @@ Commands.prototype.create = function(cmdEntry) {
 
         assert.ok(is.object(newPlayer));
         assert.ok(is.nonEmptyStr(newPlayer.name));      // FIXME
-        cmdEntry.conn.player.login(newPlayer, cmdEntry.conn.socket);
+        cmdEntry.conn.login(newPlayer, cmdEntry.conn.socket);
         mush.Server.queCmdOutput(cmdEntry, newPlayer.name+' has connected.');
     });
 };
@@ -165,7 +167,7 @@ Commands.prototype.look = function(cmdEntry) {
         target = cmdEntry.cmdAry[1];
 
     if (target === 'here') {
-        global.mush.db.get(cmdEntry.conn.player.loc, function(err, obj) {
+        global.mush.db.get(cmdEntry.conn.player.loc+'', function(err, obj) {
             if (err) return log.error('Commands.look objects.findById: %j', err);
             cmdEntry.conn.socket.write(sprintf('%s(#%d)\n%s\n', obj.name, obj.id, obj.desc));
             return;
